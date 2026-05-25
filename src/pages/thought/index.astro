@@ -1,0 +1,104 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+
+const essays     = (await getCollection('essays')).filter(e => !e.data.draft);
+const fieldNotes = (await getCollection('field-notes')).filter(e => !e.data.draft);
+const models     = (await getCollection('models')).filter(e => !e.data.draft);
+
+type Item = {
+  title: string; dek: string; date: Date;
+  type: 'essays' | 'models' | 'field';
+  label: string; url: string;
+};
+
+const all: Item[] = [
+  ...essays.map(e => ({
+    title: e.data.title,
+    dek: e.data.dek ?? '',
+    date: e.data.date,
+    type: 'essays' as const,
+    label: 'Essay',
+    url: `/essays/${e.slug}/`,
+  })),
+  ...models.map(m => ({
+    title: m.data.title,
+    dek: m.data.tagline ?? '',
+    date: m.data.date,
+    type: 'models' as const,
+    label: 'Mental Model',
+    url: `/models/${m.slug}/`,
+  })),
+  ...fieldNotes.map(n => ({
+    title: n.data.title,
+    dek: '',
+    date: n.data.date,
+    type: 'field' as const,
+    label: 'Note',
+    url: `/field-notes/${n.slug}/`,
+  })),
+].sort((a, b) => b.date.getTime() - a.date.getTime());
+
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<BaseLayout title="Thought — Karan Vasdev">
+  <SiteHeader />
+  <div class="section-wrap">
+    <div class="section-head" data-section="thought">
+      <a class="crumb" href="/">Back to the map</a>
+      <h1>Thought.</h1>
+      <div class="tagline">Essays, mental models, and notes.</div>
+    </div>
+
+    <div class="thought-filters" id="thoughtFilters">
+      <button class="tf-btn active" data-filter="all">All</button>
+      <button class="tf-btn" data-filter="essays">Essays</button>
+      <button class="tf-btn" data-filter="models">Mental Models</button>
+      <button class="tf-btn" data-filter="field">Notes</button>
+    </div>
+
+    <div class="thought-grid" id="thoughtGrid">
+      {all.map(item => (
+        <a class="thought-card" data-type={item.type} href={item.url}>
+          <div class="tc-body">
+            <div class="tc-label" data-section={item.type}>{item.label}</div>
+            <div class="tc-title">{item.title}</div>
+            {item.dek && <div class="tc-dek">{item.dek}</div>}
+            <div class="tc-date">{fmt(item.date)}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const initial = params.get('filter') || 'all';
+
+  const btns = document.querySelectorAll<HTMLButtonElement>('.tf-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.thought-card');
+
+  function setFilter(f: string) {
+    btns.forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+    cards.forEach(c => {
+      c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none';
+    });
+  }
+
+  setFilter(initial);
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter || 'all';
+      setFilter(f);
+      const url = new URL(window.location.href);
+      if (f === 'all') url.searchParams.delete('filter');
+      else url.searchParams.set('filter', f);
+      history.replaceState({}, '', url);
+    });
+  });
+</script>

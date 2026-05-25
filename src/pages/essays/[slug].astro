@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+
+export async function getStaticPaths() {
+  const essays = (await getCollection('essays')).filter(e => !e.data.draft);
+  return essays.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+// Build threads: other posts sharing tags with this one
+const [essays, fieldNotes, marginalia, models] = await Promise.all([
+  getCollection('essays'),
+  getCollection('field-notes'),
+  getCollection('marginalia'),
+  getCollection('models'),
+]);
+type Rel = { section: string; sectionLabel: string; title: string; url: string; shared: string[] };
+const allOthers: Rel[] = [
+  ...essays.filter(e => !e.data.draft && e.slug !== entry.slug).map(e => ({ section: 'essays', sectionLabel: 'Essay', title: e.data.title, url: `/essays/${e.slug}/`, shared: e.data.tags.filter(t => entry.data.tags.includes(t)) })),
+  ...fieldNotes.filter(e => !e.data.draft).map(e => ({ section: 'field', sectionLabel: 'Field Note', title: e.data.title, url: `/field-notes/${e.slug}/`, shared: e.data.tags.filter(t => entry.data.tags.includes(t)) })),
+  ...marginalia.filter(e => !e.data.draft).map(e => ({ section: 'marginalia', sectionLabel: 'Marginalia', title: e.data.title, url: `/marginalia/${e.slug}/`, shared: e.data.tags.filter(t => entry.data.tags.includes(t)) })),
+  ...models.filter(e => !e.data.draft).map(e => ({ section: 'models', sectionLabel: 'Model', title: e.data.title, url: `/models/${e.slug}/`, shared: e.data.tags.filter(t => entry.data.tags.includes(t)) })),
+];
+const threads = allOthers.filter(o => o.shared.length > 0).slice(0, 4);
+
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<BaseLayout title={`${entry.data.title} — Karan Vasdev`} description={entry.data.dek}>
+  <SiteHeader />
+  <article class="post-wrap">
+    <a class="back-link" href="/thought">Back to Thought</a>
+    <div class="post-meta">
+      <span class="section-tag" data-section="essays">Essay</span>
+      <span>{fmt(entry.data.date)}</span>
+      {entry.data.readTime && <span>{entry.data.readTime} min</span>}
+    </div>
+    <h1 class="post-title" set:html={entry.data.title} />
+    <p class="post-dek">{entry.data.dek}</p>
+    <div class="post-body essay">
+      <Content />
+    </div>
+    {entry.data.tags.length > 0 && (
+      <div class="tag-row">
+        {entry.data.tags.map(t => <span class="tag">{t}</span>)}
+      </div>
+    )}
+    {threads.length > 0 && (
+      <div class="threads">
+        <div class="threads-title">Threads from this piece</div>
+        <div class="thread-list">
+          {threads.map(t => (
+            <a class="thread" data-section={t.section} href={t.url}>
+              <div class="t-section">{t.sectionLabel}</div>
+              <div class="t-title">{t.title}</div>
+              <div class="t-rel">shares: {t.shared.join(', ')}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </article>
+  <SiteFooter />
+</BaseLayout>

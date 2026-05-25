@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import TopologyMap from '../components/TopologyMap.astro';
+---
+<BaseLayout title="Karan Vasdev">
+  <SiteHeader />
+  <div class="landing-wrap">
+    <div class="landing-intro">
+      <h1>Doing interesting things with empathy that create an <em>outsized, positive impact.</em></h1>
+    </div>
+    <TopologyMap />
+  </div>
+  <SiteFooter />
+</BaseLayout>

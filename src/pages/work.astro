@@ -1,0 +1,504 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+// ─── SWAP THESE WHEN READY ───────────────────────────────────────────
+const LINKS = {
+  linkedin:  'https://www.linkedin.com/in/karan-vasdev/',
+  email:     'mailto:karanvasdev21@gmail.com',
+  maintainx: 'https://drive.google.com/file/d/1HAUJotF3nUNoBtYay_GoPb3cLLDPvtoi/view?usp=sharing',
+  persona:   'https://drive.google.com/file/d/1oL87PI8GJ01RPFxo7a1ogMs6g0dk84Fa/view?usp=sharing',
+  sama: 'https://drive.google.com/file/d/1mL5_oM0-_GeiNUPnhunU--qQO_-dQWPm/view?usp=sharing',
+  reusableeats: 'https://www.linkedin.com/posts/karan-vasdev_hackathon-mentors-experts-activity-6777669492974727168-XqaC?utm_source=share&utm_medium=member_desktop&rcm=ACoAACntFwkBZv1tVdDKAcFC115PWpsKSWDJAxM',
+  nscc: 'https://www.linkedin.com/posts/karan-vasdev_strategy-consulting-students-activity-6907783429035843584-1Nw3?utm_source=share&utm_medium=member_desktop&rcm=ACoAACntFwkBZv1tVdDKAcFC115PWpsKSWDJAxM',
+  pwc: 'https://www.linkedin.com/posts/karan-vasdev_strategy-cybersecurity-learning-activity-6866056711510343680-e34w?utm_source=share&utm_medium=member_desktop&rcm=ACoAACntFwkBZv1tVdDKAcFC115PWpsKSWDJAxM',
+  shacks: 'https://www.linkedin.com/posts/karan-vasdev_java-nlp-android-activity-6700460110847840256-Tcyf?utm_source=share&utm_medium=member_desktop&rcm=ACoAACntFwkBZv1tVdDKAcFC115PWpsKSWDJAxM',
+  bulkannotation: 'https://www.linkedin.com/posts/karan-vasdev_sama-eliminates-repetitive-work-in-ai-data-activity-7399149808789164033-Tijd?utm_source=share&utm_medium=member_desktop&rcm=ACoAACntFwkBZv1tVdDKAcFC115PWpsKSWDJAxM',
+
+};
+// ─────────────────────────────────────────────────────────────────────
+
+// Gantt data — start/end as [year, month] (month 1-12), row = vertical lane
+// type: 'fulltime' | 'intern' | 'academic' | 'entrepreneurial'
+// Row 0 = primary work (sequential), Row 1 = concurrent entrepreneurial, Row 2 = academic
+// Gantt data — start/end as [year, month] (month 1-12), row = vertical lane
+// type: 'fulltime' | 'intern' | 'education' | 'entrepreneurial'
+// Row 0 = work (sequential), Row 1 = entrepreneurial (concurrent), Row 2 = education, Row 3 = programs
+const gantt = [
+  { role: 'IoT Agriculture Teacher', org: 'Non-profit', city: 'Kigali, Rwanda', note: 'Taught farmers how to assemble, code, and use Arduino IoT systems to improve crop monitoring and yield.', start: [2019, 5], end: [2019, 8], logo: '', row: 0, type: 'intern' },
+  { role: 'Technical Product Sales Intern', org: 'CELA Technology', city: 'Vancouver, BC', note: 'Pitched AR/VR 3D modelling products to 30+ enterprise leads and collected product feedback for the CTO.', start: [2020, 5], end: [2020, 8], logo: '/logos/cela.png', row: 0, type: 'intern' },
+  { role: 'Data Science Intern, Global Risk Management', org: 'Scotiabank', city: 'Toronto, ON', note: 'Built Python/SQL pipelines and Power BI dashboards to evaluate credit risk strategies for Small Business clients.', start: [2021, 1], end: [2021, 4], logo: '/logos/scotiabank.png', row: 0, type: 'intern' },
+  { role: 'Management Consultant Intern', org: 'KPMG Canada', city: 'Toronto, ON', note: 'Led data analytics coordinating COVID-19 medical supply delivery to Ontario public institutions, helping ~11M people.', start: [2021, 5], end: [2021, 8], logo: '/logos/kpmg.png', row: 0, type: 'intern' },
+  { role: 'PM Intern, AI & Machine Learning', org: 'Scotiabank', city: 'Toronto, ON', note: 'Built an ML MVP to automate ATM cash supply prediction, estimated to save $1.3M per year.', start: [2022, 5], end: [2022, 8], logo: '/logos/scotiabank.png', row: 0, type: 'intern' },
+  { role: 'Associate Product Manager', org: 'Scotiabank', city: 'Toronto, ON', note: 'Fastest APM-to-PM promotion in the program. Led roadmaps, sprint planning, and cross-functional alignment across 16 teams.', start: [2023, 6], end: [2024, 4], logo: '/logos/scotiabank.png', row: 0, type: 'fulltime' },
+  { role: 'Product Manager, Authentication & Fraud', org: 'Scotiabank', city: 'Toronto, ON', note: 'Led the development of authentication products in mobile app, website, branches, and call centres for 5M+ customers.', start: [2024, 4], end: [2025, 4], logo: '/logos/scotiabank.png', row: 0, type: 'fulltime' },
+  { role: 'Product Manager II, NLP', org: 'Sama', city: 'Toronto, ON', note: 'Built the NLP product portfolio from 0 to 1, scaling it to 50%+ of company revenue in under a year.', start: [2025, 4], end: [2026, 6], logo: '/logos/sama.png', row: 0, type: 'fulltime' },
+  { role: 'Product Manager', org: 'Sports Tech Startup', city: 'Toronto, ON', note: 'Brief time as a founding PM at a VC-funded B2C/B2B2C sports-tech startup. Learned how product and engineering work at an early-stage company.', start: [2024, 1], end: [2024, 5], logo: '/logos/sportstech.png', row: 1, type: 'entrepreneurial' },
+  { role: 'Founder & CEO', org: 'Zenira Partners', city: 'Toronto, ON', note: 'AI-native consulting practice. Sourced $22M+ for non-profits across affordable housing and healthcare.', start: [2024, 10], end: [2026, 6], logo: '/logos/zenira.png', row: 1, type: 'entrepreneurial' },
+  { role: 'Bachelor of Commerce, Business & Computer Science', org: 'University of British Columbia', city: 'Vancouver, BC', note: '3.9 GPA. Dean\'s List. Head TA. Won 6 global case competitions and hackathons. Graduated with Co-op Distinction.', start: [2018, 9], end: [2023, 4], logo: '/logos/ubc.png', row: 2, type: 'education' },
+  { role: 'AI Product Management Certification', org: 'Product Faculty / Maven', city: 'Online', note: 'Cohort-based certification by Rohan Varma (first PM at Cursor) and Henry Shi (Anthropic). Mastered the 4D method for AI product development across discovery, design, development, and deployment.', start: [2024, 9], end: [2024, 12], logo: '/logos/maven.png', row: 2, type: 'education' },
+  { role: 'Advanced PM Training Certification', org: 'Maven', city: 'Online', note: 'Advanced product management training covering senior PM frameworks, stakeholder influence, and executive communication.', start: [2025, 1], end: [2025, 3], logo: '/logos/maven.png', row: 2, type: 'education' },
+  { role: 'APM Canada Program', org: 'APM Canada', city: 'Toronto, ON', note: 'Selective associate PM program developing the next generation of Canadian product managers through mentorship, workshops, and industry exposure.', start: [2025, 1], end: [2025, 6], logo: '/logos/apmcanada.png', row: 2, type: 'education' },
+];
+
+const projects = [
+  {
+    group: 'Product and Consulting Cases',
+    items: [
+      { name: 'MaintainX — Search Product Strategy', context: 'Product Strategy · Enterprise SaaS', note: 'Defined search product strategy for a Series D AI-powered CMMS platform. Completed in <12hrs', link: LINKS.maintainx },
+      { name: 'Persona — GTM Client Pitch', context: 'GTM Strategy · Identity & Fraud', note: 'Built a brief go-to-market strategy and ROI model for selling Persona\'s identity platform to Wealthsimple. Completed in <12hrs.', link: LINKS.persona },
+      { name: 'Sama — GenAI Product Market Fit', context: 'Product Strategy · GenAI', note: 'Selected a pilot client to start with for a new GenAI data annotation product. Completed in <24hrs', link: LINKS.sama },
+      { name: 'ReusableEats – 1st / 60 teams globally', context: 'Product Strategy · Prototyping · Sustainability', note: 'Winner of Hack the Globe, hosted by Google, BCG, UNICEF, and others. Presented and built a circular economy marketplace app for reusable takeout containers. Completed in <72hrs' , link: LINKS.reusableeats },
+      { name: 'National Strategy Consulting Competition – 1st / 60 teams', context: 'Business Strategy · Retail', note: 'Winner of largest open case competition in Western Canada, presenting to Aritzia (retail) and FansUnite (sports betting). Completed in <24hrs', link: LINKS.nscc },
+      { name: 'JDC West, International Business Strategy – 1st / 12 teams', context: 'International Business Strategy · Architecture', note: 'Winner of largest university case competition in Western Canada. Completed in <24hrs', link: null },
+      { name: 'PwC Tech-Strategy Challenge – 1st / 10 teams', context: 'Technology Strategy · Cybersecurity', note: 'Developed a cybersecurity solution and digital transformation roadmap for a major client case. Completed in <3hrs', link: LINKS.pwc },
+      { name: 'Australian Undergraduate Business Case Competition – Finalist', context: 'Business Strategy · Retail', note: 'Selected from international applicants across multiple competitive rounds. Completed in <24hrs', link: null },
+      { name: 'Scotia Hacks – 3rd / 60 teams', context: 'Product Strategy · Prototyping · FinTech', note: 'Built a product prototype addressing financial accessibility. Completed in <72hrs', link: LINKS.shacks },
+    ],
+  },
+  {
+    group: 'Publications at Companies',
+    items: [
+      { name: 'Bulk Classification', context: 'AI/ML · Press Release', note: 'Press release on a new product release within the NLP product portfolio at Sama.', link: LINKS.bulkannotation },
+      { name: 'OmniGrouping', context: 'AI/ML · Research', note: 'Co-authored ML research on bulk annotation for categorization of sociotechnical systems. Submitted to CSCW 2026, ACM.', link: null },
+      { name: 'GenAI & Fraud in Fintech', context: 'Fintech · Policy & Strategy', note: 'Authored whitepaper at Scotiabank on GenAI and fraud strategy.', link: null },
+    ],
+  },
+];
+
+const ganttJson = JSON.stringify(gantt);
+---
+<BaseLayout title="Work — Karan Vasdev" description="Career history and projects by Karan Vasdev.">
+  <SiteHeader />
+  <div class="work-wrap">
+
+    <!-- PAGE HEADER -->
+    <div class="work-head">
+      <a class="crumb" href="/">Back to the map</a>
+      <h1>Work.</h1>
+      <div class="tagline">What I do and what I've built.</div>
+    </div>
+
+    <!-- CONTACT BUTTONS -->
+    <div class="work-contact">
+      <a class="work-btn" href={LINKS.linkedin} target="_blank" rel="noopener">
+        <span class="work-btn-icon">↗</span> LinkedIn
+      </a>
+      <a class="work-btn" href="#resume-gate">
+        <span class="work-btn-icon">↓</span> Resume
+      </a>
+      <a class="work-btn" href={LINKS.email}>
+        <span class="work-btn-icon">✉</span> Email
+      </a>
+    </div>
+
+    <!-- CAREER GANTT -->
+    <div class="work-section" id="career" style="margin-bottom: 48px; margin-top: 16px;">
+      <div class="work-section-label">Career</div>
+      <div class="gantt-wrap" id="ganttWrap">
+        <div class="gantt-tooltip" id="ganttTooltip">
+          <div class="gt-role"></div>
+          <div class="gt-org"></div>
+          <div class="gt-note"></div>
+        </div>
+      </div>
+
+      <p class="gantt-note">* Does not include part-time work experiences.</p>
+    </div>
+
+    <!-- PROJECTS -->
+    {projects.map((group, idx) => (
+      <div class="work-section" id={idx === 0 ? 'projects' : 'research'} style="margin-bottom: 48px;">
+        <div class="work-section-label">{group.group}</div>
+        <div class="project-list">
+          {group.items.map(p => (
+            <div class="project-item">
+              <div class="pi-left">
+                {p.link
+                  ? <a class="pi-name pi-linked" href={p.link} target="_blank" rel="noopener">{p.name} ↗</a>
+                  : <div class="pi-name">{p.name}</div>
+                }
+                {p.note && <div class="pi-note">{p.note}</div>}
+              </div>
+              <div class="pi-context">{p.context}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    <!-- RESUME GATE — boxed style -->
+    <div class="resume-gate" id="resume-gate">
+      <div class="resume-gate-eyebrow">Full Resume</div>
+      <h2 class="resume-gate-title">Want the full picture?</h2>
+      <p class="resume-gate-sub">No personal emails allowed. Please enter your work email if you are interested in seeing my resume or reach out to me on <a href="https://www.linkedin.com/in/karan-vasdev/" target="_blank" rel="noopener" style="color:var(--persimmon); border-bottom: 1px solid var(--persimmon-soft);">LinkedIn</a>.</p>
+
+      <form class="gate-form" id="gateForm" name="resume-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="return false;">
+        <input type="hidden" name="form-name" value="resume-request" />
+        <p style="display:none;"><input name="bot-field" /></p>
+        <div class="gate-field">
+          <label class="gate-label" for="gate-name">Full name</label>
+          <input class="gate-input" id="gate-name" name="name" type="text" autocomplete="name" placeholder="Jane Smith" />
+          <span class="gate-error" id="err-name">Please enter your name.</span>
+        </div>
+        <div class="gate-field">
+          <label class="gate-label" for="gate-role">Role</label>
+          <input class="gate-input" id="gate-role" name="role" type="text" placeholder="Hiring Manager, Recruiter, Founder..." />
+          <span class="gate-error" id="err-role">Please enter your role.</span>
+        </div>
+        <div class="gate-field">
+          <label class="gate-label" for="gate-email">Work email</label>
+          <input class="gate-input" id="gate-email" name="email" type="email" autocomplete="email" placeholder="jane@company.com" />
+          <span class="gate-error" id="err-email">Please use a valid work email.</span>
+        </div>
+        <button class="gate-submit" id="gateSubmit" type="submit">Download resume →</button>
+        <p class="gate-privacy">Your details are only used to understand who's reaching out.</p>
+      </form>
+
+      <div class="gate-success" id="gateSuccess">
+        <div class="gate-success-title">On its way.</div>
+        <p class="gate-success-body">If it didn't start, <a href="/resume/karan-vasdev-resume.pdf" download style="color:var(--persimmon); border-bottom: 1px solid var(--persimmon-soft);">click here</a>.</p>
+      </div>
+    </div>
+
+  </div>
+  <SiteFooter />
+</BaseLayout>
+
+<script is:inline define:vars={{ ganttJson }}>
+  const gantt = JSON.parse(ganttJson);
+
+  // ── palette consistent with site ──
+  const PAPER       = '#F5F1EA';
+  const PAPER_SHADE = '#EDE7DC';
+  const INK         = '#1C1A17';
+  const INK_SOFT    = '#3B3732';
+  const STONE       = '#A9A096';
+  const PERSIMMON   = '#B5543A';
+  const OCHRE       = '#A87C3C';
+  const RULE        = '#D9D2C4';
+
+  // type → solid fill colors. intern and fulltime share persimmon (both are "work")
+  const TYPE_STYLE = {
+    fulltime:       { fill: 'rgba(181,84,58,0.14)',  fillHover: 'rgba(181,84,58,0.26)',  border: '#B5543A' },
+    intern:         { fill: 'rgba(181,84,58,0.14)',  fillHover: 'rgba(181,84,58,0.26)',  border: '#B5543A' },
+    entrepreneurial:{ fill: 'rgba(28,26,23,0.08)',   fillHover: 'rgba(28,26,23,0.16)',   border: '#1C1A17' },
+    education:      { fill: 'rgba(169,160,150,0.12)',fillHover: 'rgba(169,160,150,0.24)',border: '#A9A096' },
+    academic:       { fill: 'rgba(169,160,150,0.12)',fillHover: 'rgba(169,160,150,0.24)',border: '#A9A096' },
+  };
+
+  // ── time bounds ──
+  const START_YEAR = 2018;
+  const END_YEAR   = 2027;
+  const TOTAL_MONTHS = (END_YEAR - START_YEAR) * 12;
+
+  // ── layout ──
+  const ROW_H    = 48;
+  const ROW_GAP  = 14;
+  const ROWS     = 3;
+  const LABEL_W  = 80;
+  const BAR_H    = 32;
+  const LOGO_SIZE= 18;
+
+  const wrap = document.getElementById('ganttWrap');
+  const tooltip = document.getElementById('ganttTooltip');
+
+  function monthsFrom(ym) {
+    return (ym[0] - START_YEAR) * 12 + (ym[1] - 1);
+  }
+  function pct(months) {
+    return (months / TOTAL_MONTHS) * 100;
+  }
+
+  // ── chart container ──
+  const chart = document.createElement('div');
+  chart.style.cssText = `
+    position: relative;
+    width: 100%;
+    padding-left: ${LABEL_W}px;
+    padding-bottom: 32px;
+    box-sizing: border-box;
+  `;
+  wrap.appendChild(chart);
+
+  // ── year axis lines + labels ──
+  const years = [];
+  for (let y = START_YEAR; y <= END_YEAR; y++) years.push(y);
+
+  years.forEach(y => {
+    const m = monthsFrom([y, 1]);
+    const left = pct(m);
+    const rule = document.createElement('div');
+    rule.style.left = `calc(${LABEL_W}px + ${left / 100} * (100% - ${LABEL_W}px))`;
+    rule.style.cssText += `
+      position: absolute;
+      top: 0;
+      bottom: 28px;
+      width: 1px;
+      background: ${RULE};
+      pointer-events: none;
+    `;
+    rule.style.left = `calc(${LABEL_W}px + ${left / 100} * (100% - ${LABEL_W}px))`;
+    chart.appendChild(rule);
+    const label = document.createElement('div');
+    label.textContent = y;
+    label.style.cssText = `
+      position: absolute;
+      left: calc(${LABEL_W}px + ${left / 100} * (100% - ${LABEL_W}px) - 16px);
+      bottom: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: ${STONE};
+      width: 32px;
+      text-align: center;
+    `;
+    chart.appendChild(label);
+  });
+
+  // ── sub-lane assignment within each row ──
+  // When bars in the same row overlap in time, stack them in sub-lanes that
+  // touch each other vertically. Bar height stays fixed; the row grows.
+  const SUBLANE_GAP = 0; // touching, no gap
+
+  // Group jobs by row, preserving original index
+  const jobsByRow = {};
+  gantt.forEach((job, idx) => {
+    const startM = monthsFrom(job.start);
+    const endM   = monthsFrom(job.end);
+    (jobsByRow[job.row] = jobsByRow[job.row] || []).push({ job, idx, startM, endM });
+  });
+
+  // Greedy lane packing per row: sort by start, place into earliest free lane.
+  const laneAssignment = new Map(); // idx -> lane index within its row
+  const rowLaneCount  = {};          // row -> total lanes for that row
+  for (let r = 0; r < ROWS; r++) {
+    const rowJobs = jobsByRow[r] || [];
+    rowJobs.sort((a, b) => a.startM - b.startM);
+    const lanes = []; // lanes[i] = last endM occupying lane i
+    rowJobs.forEach(entry => {
+      let placed = -1;
+      for (let i = 0; i < lanes.length; i++) {
+        if (entry.startM >= lanes[i]) { placed = i; break; }
+      }
+      if (placed === -1) { placed = lanes.length; lanes.push(entry.endM); }
+      else { lanes[placed] = entry.endM; }
+      laneAssignment.set(entry.idx, placed);
+    });
+    rowLaneCount[r] = Math.max(1, lanes.length);
+  }
+
+  // Compute each row's height (grows with lane count) and cumulative top-Y.
+  const rowHeight = {};
+  const rowTopY   = {};
+  let cursorY = 0;
+  for (let r = 0; r < ROWS; r++) {
+    const lanes = rowLaneCount[r];
+    // Row needs to fit `lanes` bars stacked, plus the same vertical padding
+    // (ROW_H - BAR_H) that a single-lane row has, so the visual rhythm stays
+    // consistent at the top/bottom of each row.
+    const PAD = ROW_H - BAR_H; // total vertical padding (half top, half bottom)
+    rowHeight[r] = lanes * BAR_H + (lanes - 1) * SUBLANE_GAP + PAD;
+    rowTopY[r] = cursorY;
+    cursorY += rowHeight[r] + ROW_GAP;
+  }
+  const totalH = cursorY - ROW_GAP;
+  chart.style.height = (totalH + 40) + 'px';
+
+  // ── y-axis row labels ──
+  const ROW_LABELS = ['Work', 'Entrepreneurship', 'Education'];
+  ROW_LABELS.forEach((label, i) => {
+    const rowMid = rowTopY[i] + rowHeight[i] / 2;
+    const el = document.createElement('div');
+    el.textContent = label;
+    el.style.cssText = `
+      position: absolute;
+      left: 0;
+      top: ${rowMid}px;
+      width: ${LABEL_W - 8}px;
+      transform: translateY(-50%);
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: ${STONE};
+      text-align: right;
+      pointer-events: none;
+      line-height: 1.2;
+    `;
+    chart.appendChild(el);
+  });
+
+  // ── bars ──
+  gantt.forEach((job, idx) => {
+    const startM = monthsFrom(job.start);
+    const endM   = monthsFrom(job.end);
+    const left   = startM / TOTAL_MONTHS;
+    const width  = (endM - startM) / TOTAL_MONTHS;
+    const lane   = laneAssignment.get(idx);
+    // Top padding inside the row stays at half of (ROW_H - BAR_H) so a single
+    // bar is still vertically centered like before.
+    const topPad = (ROW_H - BAR_H) / 2;
+    const top    = rowTopY[job.row] + topPad + lane * (BAR_H + SUBLANE_GAP);
+    const style  = TYPE_STYLE[job.type] || TYPE_STYLE.fulltime;
+
+    const bar = document.createElement('div');
+    bar.style.cssText = `
+      position: absolute;
+      left: calc(${LABEL_W}px + ${left} * (100% - ${LABEL_W}px));
+      width: calc(${width} * (100% - ${LABEL_W}px));
+      top: ${top}px;
+      height: ${BAR_H}px;
+      background: ${style.fill};
+      border: 1px solid ${style.border}44;
+      border-left: 3px solid ${style.border};
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      box-sizing: border-box;
+      overflow: hidden;
+      border-radius: 0;
+    `;
+
+    // local logo
+    const img = document.createElement('img');
+    img.src = job.logo;
+    img.alt = job.org;
+    img.style.cssText = `
+      width: ${LOGO_SIZE}px;
+      height: ${LOGO_SIZE}px;
+      object-fit: contain;
+      flex-shrink: 0;
+      border-radius: 2px;
+    `;
+    img.onerror = () => {
+      img.style.display = 'none';
+      abbr.style.display = 'flex';
+    };
+
+    // fallback initial circle
+    const abbr = document.createElement('div');
+    abbr.textContent = job.org[0];
+    abbr.style.cssText = `
+      display: none;
+      width: ${LOGO_SIZE}px;
+      height: ${LOGO_SIZE}px;
+      background: ${RULE};
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      color: ${INK_SOFT};
+      flex-shrink: 0;
+    `;
+
+    // org label
+    const orgLabel = document.createElement('span');
+    orgLabel.textContent = job.org;
+    orgLabel.style.cssText = `
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: ${INK_SOFT};
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `;
+
+    bar.appendChild(img);
+    bar.appendChild(abbr);
+    bar.appendChild(orgLabel);
+
+    // hover
+    bar.addEventListener('mouseenter', (e) => {
+      bar.style.background = style.fillHover;
+      tooltip.querySelector('.gt-role').textContent = job.role;
+      tooltip.querySelector('.gt-org').textContent  = job.org + (job.city ? '  ·  ' + job.city : '');
+      tooltip.querySelector('.gt-note').textContent = job.note;
+      tooltip.style.display = 'block';
+      positionTooltip(e);
+    });
+    bar.addEventListener('mousemove', positionTooltip);
+    bar.addEventListener('mouseleave', () => {
+      bar.style.background = style.fill;
+      tooltip.style.display = 'none';
+    });
+
+    chart.appendChild(bar);
+  });
+
+  function positionTooltip(e) {
+    const wrapRect = wrap.getBoundingClientRect();
+    const tx = e.clientX - wrapRect.left + 16;
+    const ty = e.clientY - wrapRect.top  - 12;
+    const tw = tooltip.offsetWidth || 260;
+    tooltip.style.left = Math.min(tx, wrapRect.width - tw - 8) + 'px';
+    tooltip.style.top  = ty + 'px';
+  }
+
+  // ── resume form ──
+  const BLOCKED = new Set([
+    'gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com',
+    'live.com','msn.com','aol.com','mail.com','protonmail.com',
+    'proton.me','ymail.com','googlemail.com','me.com','mac.com',
+  ]);
+  const form    = document.getElementById('gateForm');
+  const success = document.getElementById('gateSuccess');
+  const btn     = document.getElementById('gateSubmit');
+  const nameEl  = document.getElementById('gate-name');
+  const roleEl  = document.getElementById('gate-role');
+  const emailEl = document.getElementById('gate-email');
+  const errName  = document.getElementById('err-name');
+  const errRole  = document.getElementById('err-role');
+  const errEmail = document.getElementById('err-email');
+
+  function isBlocked(email) {
+    const parts = email.toLowerCase().split('@');
+    return parts.length !== 2 || BLOCKED.has(parts[1]);
+  }
+  function setErr(input, msg, show) {
+    input.classList.toggle('error', show);
+    msg.classList.toggle('visible', show);
+  }
+  function validate() {
+    let ok = true;
+    const nOk = nameEl.value.trim().length > 1;
+    setErr(nameEl, errName, !nOk); if (!nOk) ok = false;
+    const rOk = roleEl.value.trim().length > 1;
+    setErr(roleEl, errRole, !rOk); if (!rOk) ok = false;
+    const v = emailEl.value.trim();
+    const fmt = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    const eOk = fmt && !isBlocked(v);
+    errEmail.textContent = !fmt ? 'Please enter a valid email address.' : 'Please use your work email, not a personal one.';
+    setErr(emailEl, errEmail, !eOk); if (!eOk) ok = false;
+    return ok;
+  }
+  let attempted = false;
+  [nameEl, roleEl, emailEl].forEach(el =>
+    el.addEventListener('input', () => { if (attempted) validate(); })
+  );
+  btn.addEventListener('click', async () => {
+    attempted = true;
+    if (!validate()) return;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+      await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() });
+    } catch (_) {}
+    form.style.display = 'none';
+    success.classList.add('visible');
+    const a = document.createElement('a');
+    a.href = '/resume/karan-vasdev-resume.pdf';
+    a.download = 'Karan-Vasdev-Resume.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>

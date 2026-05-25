@@ -1,0 +1,361 @@
+---
+import { getCollection } from 'astro:content';
+
+const essays     = (await getCollection('essays')).filter(e => !e.data.draft);
+const fieldNotes = (await getCollection('field-notes')).filter(e => !e.data.draft);
+const models     = (await getCollection('models')).filter(e => !e.data.draft);
+
+function seededPos(seed: string, w: number, h: number) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  const rnd = (offset: number) => { const x = Math.sin(hash + offset) * 10000; return x - Math.floor(x); };
+  return { x: 100 + rnd(1) * (w - 200), y: 100 + rnd(2) * (h - 200) };
+}
+
+const W = 1800, H = 900;
+
+type NodeData = {
+  id: string; title: string; section: string; sectionLabel: string;
+  date: string; type: string; r: number; shape: string;
+  tags: string[]; url: string; x: number; y: number;
+};
+
+const nodes: NodeData[] = [];
+
+essays.forEach(e => {
+  const pos = seededPos(e.slug, W, H);
+  nodes.push({ id: `essays-${e.slug}`, title: e.data.title, section: 'essays', sectionLabel: 'Essay',
+    date: e.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    type: 'essays', r: 11, shape: 'circle', tags: e.data.tags, url: `/essays/${e.slug}/`, x: pos.x, y: pos.y });
+});
+
+fieldNotes.forEach(e => {
+  const pos = seededPos(e.slug, W, H);
+  nodes.push({ id: `field-${e.slug}`, title: e.data.title, section: 'field', sectionLabel: 'Note',
+    date: e.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    type: 'field', r: 5, shape: 'circle', tags: e.data.tags, url: `/field-notes/${e.slug}/`, x: pos.x, y: pos.y });
+});
+
+models.forEach(e => {
+  const pos = seededPos(e.slug, W, H);
+  nodes.push({ id: `models-${e.slug}`, title: e.data.title, section: 'models', sectionLabel: 'Mental Model',
+    date: e.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    type: 'models', r: 14, shape: 'diamond', tags: e.data.tags, url: `/models/${e.slug}/`, x: pos.x, y: pos.y });
+});
+
+// Career — max 3 tags each, chosen so only genuinely related writing nodes connect
+const careerEntries = [
+  { id: 'career-ewb',              title: 'IoT Agriculture Teacher — EWB Rwanda',             tags: ['teaching', 'international'] },
+  { id: 'career-cela',             title: 'Technical Product Sales Intern — CELA Technology',  tags: ['sales', 'startup'] },
+  { id: 'career-scotiabank-ds',    title: 'Data Science Intern — Scotiabank',                  tags: ['data', 'fintech'] },
+  { id: 'career-kpmg',             title: 'Management Consultant Intern — KPMG Canada',        tags: ['consulting', 'strategy'] },
+  { id: 'career-scotiabank-pm-intern', title: 'PM Intern, AI & ML — Scotiabank',              tags: ['product', 'ai'] },
+  { id: 'career-scotiabank-apm',   title: 'Associate Product Manager — Scotiabank',            tags: ['product', 'fintech'] },
+  { id: 'career-scotiabank-pm',    title: 'Product Manager, Auth & Fraud — Scotiabank',        tags: ['fraud', 'security'] },
+  { id: 'career-sama',             title: 'Product Manager II, NLP — Sama',                   tags: ['ai', 'nlp'] },
+  { id: 'career-sportstech',       title: 'Founding PM — Sports Tech Startup',                tags: ['startup', 'product'] },
+  { id: 'career-zenira',           title: 'Founder & CEO — Zenira Partners',                  tags: ['consulting', 'nonprofit'] },
+  { id: 'career-ubc',              title: 'BCom, Business & CS — UBC',                        tags: ['education', 'strategy'] },
+  { id: 'career-aipm',             title: 'AI PM Certification — Product Faculty',             tags: ['ai', 'product'] },
+  { id: 'career-advpm',            title: 'Advanced PM Training — Maven',                     tags: ['product', 'leadership'] },
+  { id: 'career-apmcanada',        title: 'APM Canada Program',                               tags: ['leadership', 'mentorship'] },
+];
+
+careerEntries.forEach(c => {
+  const pos = seededPos(c.id, W, H);
+  nodes.push({ id: c.id, title: c.title, section: 'career', sectionLabel: 'Career',
+    date: '', type: 'career', r: 9, shape: 'square', tags: c.tags, url: '/work#career', x: pos.x, y: pos.y });
+});
+
+// Projects — max 3 tags each, distinct enough to avoid blanket connectivity
+const projectEntries = [
+  { id: 'project-maintainx', title: 'MaintainX — Search Product Strategy', tags: ['product', 'saas'] },
+  { id: 'project-persona',   title: 'Persona — GTM Strategy Memo',         tags: ['gtm', 'fraud'] },
+  { id: 'project-reusable',  title: 'ReusableEats',                        tags: ['startup', 'sustainability'] },
+  { id: 'project-national',  title: 'National Strategy Competition',        tags: ['strategy', 'consulting'] },
+  { id: 'project-jdc',       title: 'JDC West — International Biz Strategy',tags: ['strategy', 'international'] },
+  { id: 'project-pwc',       title: 'PwC Tech-Strategy Challenge',          tags: ['strategy', 'technology'] },
+  { id: 'project-australia', title: 'Australian UG Business Case',          tags: ['strategy', 'international'] },
+  { id: 'project-scotiah',   title: 'Scotia Hacks',                         tags: ['fintech', 'product'] },
+];
+
+projectEntries.forEach(p => {
+  const pos = seededPos(p.id, W, H);
+  nodes.push({ id: p.id, title: p.title, section: 'projects', sectionLabel: 'Project',
+    date: '', type: 'projects', r: 8, shape: 'triangle', tags: p.tags, url: '/work#projects', x: pos.x, y: pos.y });
+});
+
+// Research — separate from projects, links to /work#research
+const researchEntries = [
+  { id: 'research-omni',  title: 'OmniGrouping',              tags: ['ai', 'research'] },
+  { id: 'research-genai', title: 'GenAI & Fraud in Fintech',  tags: ['ai', 'fraud'] },
+];
+
+researchEntries.forEach(r => {
+  const pos = seededPos(r.id, W, H);
+  nodes.push({ id: r.id, title: r.title, section: 'research', sectionLabel: 'Research',
+    date: '', type: 'research', r: 9, shape: 'ring', tags: r.tags, url: '/work#research', x: pos.x, y: pos.y });
+});
+
+// Edges from shared tags
+const edges: [string, string][] = [];
+for (let i = 0; i < nodes.length; i++) {
+  for (let j = i + 1; j < nodes.length; j++) {
+    const shared = nodes[i].tags.filter(t => nodes[j].tags.includes(t));
+    if (shared.length > 0) edges.push([nodes[i].id, nodes[j].id]);
+  }
+}
+
+const nodesJson = JSON.stringify(nodes);
+const edgesJson = JSON.stringify(edges);
+---
+
+<div class="map-section">
+  <div class="map-container" id="mapContainer">
+    <svg id="topology" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="hover-card" id="hoverCard">
+      <div class="hc-section"></div>
+      <div class="hc-title"></div>
+      <div class="hc-meta"></div>
+    </div>
+  </div>
+  <div class="map-legend">
+    <div class="legend-row"><span class="legend-shape legend-square" style="background:#1C1A17;"></span>Career</div>
+    <div class="legend-row"><span class="legend-shape legend-triangle"></span>Projects</div>
+    <div class="legend-row"><span class="legend-shape legend-ring" style="border-color:#6B4E71;"></span>Research</div>
+    <div class="legend-row"><span class="legend-shape legend-circle" style="background:#B5543A;"></span>Essays</div>
+    <div class="legend-row"><span class="legend-shape legend-diamond" style="background:#A87C3C;"></span>Mental Models</div>
+    <div class="legend-row"><span class="legend-shape legend-dot" style="background:#A9A096;"></span>Notes</div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ nodesJson, edgesJson, W, H }}>
+  const nodes = JSON.parse(nodesJson);
+  const edges = JSON.parse(edgesJson);
+
+  const COLOR = {
+    models:   '#A87C3C',
+    essays:   '#B5543A',
+    field:    '#A9A096',
+    career:   '#1C1A17',
+    projects: '#4A7C7E',
+    research: '#6B4E71',
+  };
+
+  const svg = document.getElementById('topology');
+  const mapContainer = document.getElementById('mapContainer');
+  const hoverCard = document.getElementById('hoverCard');
+  const ns = 'http://www.w3.org/2000/svg';
+
+  nodes.forEach(n => { n.vx = 0; n.vy = 0; n.fx = null; n.fy = null; });
+
+  const edgeEls = [];
+  edges.forEach(([a, b]) => {
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('class', 'edge');
+    line.setAttribute('data-a', a); line.setAttribute('data-b', b);
+    svg.appendChild(line);
+    edgeEls.push({ el: line, a, b });
+  });
+
+  const nodeEls = [];
+  nodes.forEach(n => {
+    let el;
+    const color = COLOR[n.type] || '#A9A096';
+
+    if (n.shape === 'diamond') {
+      el = document.createElementNS(ns, 'polygon');
+      el.setAttribute('fill', color);
+    } else if (n.shape === 'square') {
+      el = document.createElementNS(ns, 'rect');
+      el.setAttribute('fill', color);
+      el.setAttribute('opacity', '0.85');
+    } else if (n.shape === 'triangle') {
+      el = document.createElementNS(ns, 'polygon');
+      el.setAttribute('fill', color);
+      el.setAttribute('opacity', '0.9');
+    } else if (n.shape === 'ring') {
+      el = document.createElementNS(ns, 'circle');
+      el.setAttribute('r', n.r);
+      el.setAttribute('fill', 'none');
+      el.setAttribute('stroke', color);
+      el.setAttribute('stroke-width', '2');
+    } else {
+      el = document.createElementNS(ns, 'circle');
+      el.setAttribute('r', n.r);
+      el.setAttribute('fill', color);
+    }
+
+    el.setAttribute('class', 'node');
+    el.setAttribute('data-id', n.id);
+
+    el.addEventListener('mouseenter', () => {
+      if (dragNode) return;
+      hoverCard.classList.add('visible');
+      const sec = hoverCard.querySelector('.hc-section');
+      sec.textContent = n.sectionLabel;
+      sec.style.color =
+        n.type === 'essays'   ? 'var(--c-essays)'  :
+        n.type === 'field'    ? 'var(--c-field)'   :
+        n.type === 'models'   ? 'var(--c-models)'  :
+        n.type === 'career'   ? 'var(--ink)'       :
+        n.type === 'research' ? '#6B4E71'          :
+        '#4A7C7E';
+      hoverCard.querySelector('.hc-title').textContent = n.title;
+      hoverCard.querySelector('.hc-meta').textContent = n.date || (n.type === 'career' ? 'Click to view career' : n.type === 'research' ? 'Click to view research' : 'Click to view project');
+      positionCard(n);
+      edgeEls.forEach(({ el, a, b }) => {
+        if (a === n.id || b === n.id) el.classList.add('highlight');
+      });
+    });
+    el.addEventListener('mouseleave', () => {
+      hoverCard.classList.remove('visible');
+      edgeEls.forEach(({ el }) => el.classList.remove('highlight'));
+    });
+    el.addEventListener('click', () => {
+      if (justDragged) { justDragged = false; return; }
+      window.location.href = n.url;
+    });
+
+    svg.appendChild(el);
+    nodeEls.push({ el, n });
+  });
+
+  function positionCard(n) {
+    const mapRect = svg.getBoundingClientRect();
+    const containerRect = mapContainer.getBoundingClientRect();
+    const xRatio = mapRect.width / W;
+    const yRatio = mapRect.height / H;
+    const px = (mapRect.left - containerRect.left) + n.x * xRatio + 18;
+    const py = (mapRect.top - containerRect.top) + n.y * yRatio - 10;
+    hoverCard.style.left = Math.min(Math.max(8, px), containerRect.width - 300) + 'px';
+    hoverCard.style.top = Math.min(Math.max(8, py), containerRect.height - 100) + 'px';
+  }
+
+  let dragNode = null, justDragged = false;
+  let dragOffset = { x: 0, y: 0 };
+
+  function svgCoords(clientX, clientY) {
+    const rect = svg.getBoundingClientRect();
+    return { x: ((clientX - rect.left) / rect.width) * W, y: ((clientY - rect.top) / rect.height) * H };
+  }
+
+  svg.addEventListener('pointerdown', (e) => {
+    const target = e.target.closest('.node');
+    if (!target) return;
+    const n = nodes.find(x => x.id === target.getAttribute('data-id'));
+    if (!n) return;
+    dragNode = n;
+    const p = svgCoords(e.clientX, e.clientY);
+    dragOffset.x = p.x - n.x; dragOffset.y = p.y - n.y;
+    n.fx = n.x; n.fy = n.y;
+    target.classList.add('dragging');
+    mapContainer.classList.add('dragging');
+    hoverCard.classList.remove('visible');
+    e.preventDefault();
+  });
+  window.addEventListener('pointermove', (e) => {
+    if (!dragNode) return;
+    const p = svgCoords(e.clientX, e.clientY);
+    const pad = dragNode.r + 10;
+    dragNode.fx = Math.max(pad, Math.min(W - pad, p.x - dragOffset.x));
+    dragNode.fy = Math.max(pad, Math.min(H - pad, p.y - dragOffset.y));
+    justDragged = true;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!dragNode) return;
+    svg.querySelector(`.node[data-id="${dragNode.id}"]`)?.classList.remove('dragging');
+    mapContainer.classList.remove('dragging');
+    dragNode.fx = null; dragNode.fy = null;
+    dragNode = null;
+    setTimeout(() => { justDragged = false; }, 50);
+  });
+
+  let breathT = 0;
+  const CX = W / 2, CY = H / 2;
+
+  function step() {
+    const REPULSION = 14000;
+    const SPRING = 0.012;
+    const DAMPING = 0.80;
+    const CENTER_PULL = 0.00008;
+    const IDEAL_EDGE = 220;
+    const BREATH = 0.45;
+    breathT += 0.007;
+
+    const fx = {}, fy = {};
+    nodes.forEach((n, i) => {
+      fx[n.id] = Math.sin(breathT + i * 0.7) * BREATH;
+      fy[n.id] = Math.cos(breathT * 0.83 + i * 1.3) * BREATH;
+    });
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        let dx = a.x - b.x, dy = a.y - b.y;
+        let d2 = dx*dx + dy*dy; if (d2 < 1) d2 = 1;
+        const d = Math.sqrt(d2), f = REPULSION / d2;
+        const ux = dx / d, uy = dy / d;
+        fx[a.id] += ux * f; fy[a.id] += uy * f;
+        fx[b.id] -= ux * f; fy[b.id] -= uy * f;
+      }
+    }
+
+    edges.forEach(([ai, bi]) => {
+      const a = nodes.find(n => n.id === ai), b = nodes.find(n => n.id === bi);
+      if (!a || !b) return;
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const d = Math.sqrt(dx*dx + dy*dy) || 1;
+      const diff = d - IDEAL_EDGE, ux = dx / d, uy = dy / d, f = SPRING * diff;
+      fx[a.id] += ux * f * 50; fy[a.id] += uy * f * 50;
+      fx[b.id] -= ux * f * 50; fy[b.id] -= uy * f * 50;
+    });
+
+    nodes.forEach(n => {
+      fx[n.id] += (CX - n.x) * CENTER_PULL * 50;
+      fy[n.id] += (CY - n.y) * CENTER_PULL * 50;
+    });
+
+    nodes.forEach(n => {
+      if (n.fx !== null) { n.x = n.fx; n.y = n.fy; n.vx = 0; n.vy = 0; return; }
+      n.vx = (n.vx + fx[n.id] * 0.01) * DAMPING;
+      n.vy = (n.vy + fy[n.id] * 0.01) * DAMPING;
+      n.x += n.vx; n.y += n.vy;
+      const pad = n.r + 4;
+      if (n.x < pad) { n.x = pad; n.vx *= -0.4; }
+      if (n.x > W - pad) { n.x = W - pad; n.vx *= -0.4; }
+      if (n.y < pad) { n.y = pad; n.vy *= -0.4; }
+      if (n.y > H - pad) { n.y = H - pad; n.vy *= -0.4; }
+    });
+
+    nodeEls.forEach(({ el, n }) => {
+      const r = n.r;
+      if (n.shape === 'diamond') {
+        el.setAttribute('points', `${n.x},${n.y - r} ${n.x + r},${n.y} ${n.x},${n.y + r} ${n.x - r},${n.y}`);
+      } else if (n.shape === 'square') {
+        const s = r * 1.8;
+        el.setAttribute('x', n.x - s / 2);
+        el.setAttribute('y', n.y - s / 2);
+        el.setAttribute('width', s);
+        el.setAttribute('height', s);
+      } else if (n.shape === 'triangle') {
+        const h = r * 2;
+        el.setAttribute('points', `${n.x},${n.y - h} ${n.x + h * 0.866},${n.y + h * 0.5} ${n.x - h * 0.866},${n.y + h * 0.5}`);
+      } else {
+        // circle and ring both use cx/cy
+        el.setAttribute('cx', n.x);
+        el.setAttribute('cy', n.y);
+      }
+    });
+
+    edgeEls.forEach(({ el, a, b }) => {
+      const na = nodes.find(n => n.id === a), nb = nodes.find(n => n.id === b);
+      if (!na || !nb) return;
+      el.setAttribute('x1', na.x); el.setAttribute('y1', na.y);
+      el.setAttribute('x2', nb.x); el.setAttribute('y2', nb.y);
+    });
+
+    requestAnimationFrame(step);
+  }
+  step();
+</script>

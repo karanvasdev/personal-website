@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+
+const essays     = (await getCollection('essays')).filter(e => !e.data.draft);
+const fieldNotes = (await getCollection('field-notes')).filter(e => !e.data.draft);
+const models     = (await getCollection('models')).filter(e => !e.data.draft);
+const thoughtTotal = essays.length + fieldNotes.length + models.length;
+---
+<header class="site-header">
+  <a class="mark" href="/">Karan Vasdev</a>
+  <nav class="sections">
+
+    <div class="nav-group" data-group="work">
+      <a class="nav-parent" data-section="work" href="/work">Work</a>
+      <div class="nav-children">
+        <a class="nav-child" href="/work#career">Career</a>
+        <a class="nav-child" href="/work#projects">Projects</a>
+        <a class="nav-child" href="/work#research">Research</a>
+      </div>
+    </div>
+
+    <div class="nav-group" data-group="thought">
+      <a class="nav-parent" data-section="thought" href="/thought">Thought<span class="count">{thoughtTotal}</span></a>
+      <div class="nav-children">
+        <a class="nav-child" data-section="essays" href="/thought?filter=essays">Essays<span class="count">{essays.length}</span></a>
+        <a class="nav-child" data-section="models" href="/thought?filter=models">Mental Models<span class="count">{models.length}</span></a>
+        <a class="nav-child" data-section="field"  href="/thought?filter=field">Notes<span class="count">{fieldNotes.length}</span></a>
+      </div>
+    </div>
+
+  </nav>
+</header>

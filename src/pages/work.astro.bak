@@ -1,0 +1,315 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+// ─── SWAP THESE WHEN READY ───────────────────────────────────────────
+const LINKS = {
+  linkedin:   'https://www.linkedin.com/in/karan-vasdev/',
+  email:      'mailto:karanvasdev21@gmail.com',
+  maintainx:  'REPLACE_WITH_GOOGLE_DRIVE_LINK',
+  persona:    'REPLACE_WITH_GOOGLE_DRIVE_LINK',
+};
+// ─────────────────────────────────────────────────────────────────────
+
+const career = [
+  {
+    role: 'Product Manager II, NLP',
+    org: 'Sama',
+    dates: 'Apr 2025 – Present',
+    note: 'Built the NLP product portfolio from 0 to 1, scaling it to 50%+ of company revenue in under a year.',
+  },
+  {
+    role: 'Founder & CEO',
+    org: 'Zenira Partners',
+    dates: 'Oct 2024 – Present',
+    note: 'AI-native consulting practice. Sourced $22M+ for non-profits across affordable housing and healthcare.',
+  },
+  {
+    role: 'Product Manager, Authentication & Fraud',
+    org: 'Scotiabank',
+    dates: 'Apr 2024 – Apr 2025',
+    note: 'Saved $8M+ in costs and secured $12M in funding leading authentication products for 5M+ customers.',
+  },
+  {
+    role: 'Associate Product Manager',
+    org: 'Scotiabank',
+    dates: 'Jun 2023 – Apr 2024',
+    note: 'Fastest APM-to-PM promotion in the program. Led roadmaps, sprint planning, and cross-functional alignment across 16 stakeholder teams.',
+  },
+  {
+    role: 'Product Manager Intern, AI & Machine Learning',
+    org: 'Scotiabank',
+    dates: 'May – Aug 2022',
+    note: 'Built an ML MVP to automate ATM cash supply prediction, estimated to save $1.3M per year.',
+  },
+  {
+    role: 'Management Consultant Intern',
+    org: 'KPMG Canada',
+    dates: 'May – Aug 2021',
+    note: 'Led data analytics coordinating COVID-19 medical supply delivery to Ontario public institutions, helping ~11M people.',
+  },
+  {
+    role: 'Data Science Intern, Global Risk Management',
+    org: 'Scotiabank',
+    dates: 'Jan – Apr 2021',
+    note: 'Built Python/SQL data pipelines and Power BI dashboards to evaluate credit risk strategies for Small Business clients, informing cost reduction decisions in retail banking.',
+  },
+];
+
+const projects = [
+  {
+    group: 'Featured',
+    items: [
+      {
+        name: 'MaintainX — Senior Technical PM Take-Home',
+        context: 'Interview · 2026',
+        note: 'Search product strategy for a Series D AI-powered CMMS platform.',
+        link: LINKS.maintainx,
+      },
+      {
+        name: 'Persona — GTM Strategy Memo',
+        context: 'Interview · 2024',
+        note: 'Go-to-market strategy for selling Persona's identity platform to Wealthsimple, including a full ROI model.',
+        link: LINKS.persona,
+      },
+    ],
+  },
+  {
+    group: 'Competitions & Hackathons',
+    items: [
+      { name: 'ReusableEats', context: 'BCG Hack the Globe · 1st / 60 teams', note: 'Won Google + BCG's global social impact hackathon. Circular economy marketplace for reusable takeout containers.', link: null },
+      { name: 'National Strategy Competition', context: '1st / 60 teams', note: null, link: null },
+      { name: 'JDC West — International Business Strategy', context: '1st / 12 teams', note: null, link: null },
+      { name: 'PwC Tech-Strategy Challenge', context: '1st / 12 teams', note: null, link: null },
+      { name: 'Australian Undergraduate Business Case Competition', context: 'Finalist', note: null, link: null },
+      { name: 'Scotia Hacks', context: '3rd / 60 teams', note: null, link: null },
+    ],
+  },
+  {
+    group: 'Research & Writing',
+    items: [
+      { name: 'OmniGrouping', context: 'ML Research · CSCW 2026, ACM', note: 'Co-authored research on bulk annotation for categorization of sociotechnical systems.', link: null },
+      { name: 'GenAI & Fraud in Fintech', context: 'Whitepaper · Scotiabank', note: 'Informed the division\'s 5-year product roadmap on GenAI and fraud strategy.', link: null },
+    ],
+  },
+  {
+    group: 'Community & Teaching',
+    items: [
+      { name: 'Rwanda IoT Agriculture', context: 'Teaching', note: 'Taught 35 farmers to build Arduino IoT systems for crop monitoring and yield improvement.', link: null },
+      { name: 'UBC Case Competition Coaching', context: 'Mentorship', note: 'Head Coach of UBC\'s largest case competition program. Mentored at UofTHacks and RUHacks.', link: null },
+      { name: 'This site', context: 'Personal Project', note: 'A topology-mapped personal site built with Astro. Physics-based graph, Markdown-driven, no CMS.', link: null },
+    ],
+  },
+];
+---
+<BaseLayout title="Work — Karan Vasdev" description="Career history and projects by Karan Vasdev.">
+  <SiteHeader />
+  <div class="work-wrap">
+
+    <!-- PAGE HEADER -->
+    <div class="work-head">
+      <a class="crumb" href="/">Back to the map</a>
+      <h1>Work.</h1>
+      <div class="tagline">What I do and what I've built.</div>
+    </div>
+
+    <!-- CONTACT BUTTONS -->
+    <div class="work-contact">
+      <a class="work-btn" href={LINKS.linkedin} target="_blank" rel="noopener">
+        <span class="work-btn-icon">↗</span> LinkedIn
+      </a>
+      <a class="work-btn" href="#resume-gate">
+        <span class="work-btn-icon">↓</span> Resume
+      </a>
+      <a class="work-btn" href={LINKS.email}>
+        <span class="work-btn-icon">✉</span> Email
+      </a>
+    </div>
+
+    <!-- CAREER + PROJECTS SIDE BY SIDE -->
+    <div class="work-columns">
+
+      <!-- LEFT: CAREER TIMELINE -->
+      <div>
+        <div class="work-section-label">Career</div>
+        <div class="timeline">
+          {career.map((c, i) => (
+            <div class="tl-item">
+              <div class="tl-left">
+                <div class="tl-dates">{c.dates}</div>
+              </div>
+              <div class="tl-dot-col">
+                <div class="tl-dot"></div>
+                {i < career.length - 1 && <div class="tl-line"></div>}
+              </div>
+              <div class="tl-right">
+                <div class="tl-role">{c.role}</div>
+                <div class="tl-org">{c.org}</div>
+                <div class="tl-note">{c.note}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- RIGHT: PROJECTS -->
+      <div>
+        {projects.map(group => (
+          <div class="work-section" style="margin-bottom: 40px;">
+            <div class="work-section-label">{group.group}</div>
+            <div class="project-list">
+              {group.items.map(p => (
+                <div class="project-item">
+                  <div class="pi-left">
+                    {p.link
+                      ? <a class="pi-name pi-linked" href={p.link} target="_blank" rel="noopener">{p.name} ↗</a>
+                      : <div class="pi-name">{p.name}</div>
+                    }
+                    {p.note && <div class="pi-note">{p.note}</div>}
+                  </div>
+                  <div class="pi-context">{p.context}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+    <!-- RESUME GATE — compact, side by side -->
+    <div class="resume-gate-compact" id="resume-gate">
+      <div class="rg-left">
+        <div class="rg-title">Want the full picture?</div>
+        <p class="rg-sub">
+          Leave your name, role, and work email. The PDF downloads immediately and I'll know you came by.
+          Personal emails won't work — this is for people who mean it.
+        </p>
+      </div>
+      <div class="rg-right">
+        <form
+          class="gate-form"
+          id="gateForm"
+          name="resume-request"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          onsubmit="return false;"
+        >
+          <input type="hidden" name="form-name" value="resume-request" />
+          <p style="display:none;"><input name="bot-field" /></p>
+
+          <div class="gate-field">
+            <label class="gate-label" for="gate-name">Full name</label>
+            <input class="gate-input" id="gate-name" name="name" type="text" autocomplete="name" placeholder="Jane Smith" />
+            <span class="gate-error" id="err-name">Please enter your name.</span>
+          </div>
+
+          <div class="gate-field">
+            <label class="gate-label" for="gate-role">Role</label>
+            <input class="gate-input" id="gate-role" name="role" type="text" placeholder="Hiring Manager, Recruiter, Founder…" />
+            <span class="gate-error" id="err-role">Please enter your role.</span>
+          </div>
+
+          <div class="gate-field">
+            <label class="gate-label" for="gate-email">Work email</label>
+            <input class="gate-input" id="gate-email" name="email" type="email" autocomplete="email" placeholder="jane@company.com" />
+            <span class="gate-error" id="err-email">Please use a valid work email.</span>
+          </div>
+
+          <button class="gate-submit" id="gateSubmit" type="submit">Download resume →</button>
+
+          <p class="gate-privacy">Not shared. Not used for anything else.</p>
+        </form>
+
+        <div class="gate-success" id="gateSuccess">
+          <div class="gate-success-title">On its way.</div>
+          <p class="gate-success-body">
+            If it didn't start,
+            <a href="/resume/karan-vasdev-resume.pdf" download style="color:var(--persimmon); border-bottom: 1px solid var(--persimmon-soft);">click here</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  const BLOCKED = new Set([
+    'gmail.com','yahoo.com','hotmail.com','outlook.com','icloud.com',
+    'live.com','msn.com','aol.com','mail.com','protonmail.com',
+    'proton.me','ymail.com','googlemail.com','me.com','mac.com',
+  ]);
+
+  const form    = document.getElementById('gateForm')    as HTMLFormElement;
+  const success = document.getElementById('gateSuccess') as HTMLElement;
+  const btn     = document.getElementById('gateSubmit')  as HTMLButtonElement;
+  const nameEl  = document.getElementById('gate-name')   as HTMLInputElement;
+  const roleEl  = document.getElementById('gate-role')   as HTMLInputElement;
+  const emailEl = document.getElementById('gate-email')  as HTMLInputElement;
+  const errName  = document.getElementById('err-name')   as HTMLElement;
+  const errRole  = document.getElementById('err-role')   as HTMLElement;
+  const errEmail = document.getElementById('err-email')  as HTMLElement;
+
+  function isBlocked(email: string) {
+    const parts = email.toLowerCase().split('@');
+    return parts.length !== 2 || BLOCKED.has(parts[1]);
+  }
+
+  function setErr(input: HTMLInputElement, msg: HTMLElement, show: boolean) {
+    input.classList.toggle('error', show);
+    msg.classList.toggle('visible', show);
+  }
+
+  function validate() {
+    let ok = true;
+    const nameOk = nameEl.value.trim().length > 1;
+    setErr(nameEl, errName, !nameOk);
+    if (!nameOk) ok = false;
+
+    const roleOk = roleEl.value.trim().length > 1;
+    setErr(roleEl, errRole, !roleOk);
+    if (!roleOk) ok = false;
+
+    const v = emailEl.value.trim();
+    const fmt = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    const emailOk = fmt && !isBlocked(v);
+    errEmail.textContent = !fmt
+      ? 'Please enter a valid email address.'
+      : 'Please use your work email, not a personal one.';
+    setErr(emailEl, errEmail, !emailOk);
+    if (!emailOk) ok = false;
+
+    return ok;
+  }
+
+  let attempted = false;
+  [nameEl, roleEl, emailEl].forEach(el =>
+    el.addEventListener('input', () => { if (attempted) validate(); })
+  );
+
+  btn.addEventListener('click', async () => {
+    attempted = true;
+    if (!validate()) return;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form) as any).toString(),
+      });
+    } catch (_) {}
+    form.style.display = 'none';
+    success.classList.add('visible');
+    const a = document.createElement('a');
+    a.href = '/resume/karan-vasdev-resume.pdf';
+    a.download = 'Karan-Vasdev-Resume.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>
