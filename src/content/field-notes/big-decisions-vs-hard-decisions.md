@@ -5,14 +5,16 @@ tags: [decisions, mental models, problem-solving]
 draft: false
 ---
 
-The size of a decision and the difficulty of a decision are often unrelated.
+Some decisions feel hard for reasons that have little to do with their complexity or importance.
 
-Some people spend weeks deciding where to eat dinner. Others decide to move cities, quit jobs, or start companies in a matter of hours. The difference is rarely the magnitude of the decision itself. It is the amount of conviction behind the answer.
+People sometimes spend more time deciding where to eat dinner than deciding whether to move cities or quit jobs. What makes a decision feel hard is usually not the size of the consequences. It is the absence of conviction.
 
-Decisions feel hard when uncertainty remains unresolved. Conviction is what reduces that uncertainty enough to act.
+When you already know roughly what you want, even large decisions can feel obvious. And when you do not, even trivial decisions can feel impossible. So where does conviction come from?
 
-We build conviction through frameworks and tools that help simplify complexity. Some break large problems into smaller, answerable questions. Others abstract a problem into patterns we have seen before. These frameworks are often described as mental models.
+Conviction comes from reducing uncertainty enough to act.
 
-It's important to note that mental models are not objective truths. The models we choose, the assumptions we make, and the way we interpret information are all shaped by incomplete inputs and probabilistic outcomes.
+There are different ways to do this. One method is to break a large problem into smaller questions that are easier to answer independently. Another method to recognize patterns from problems you have seen before and apply the same reasoning again. These frameworks of problem-solving are often called mental models.
 
-Most real-world decisions do not have perfect answers. They have tradeoffs, uncertainty, and changing constraints. The best decision you can make at a given moment is usually the one you can justify with the highest conviction based on the information available to you.
+The interesting thing about mental models is that it cannot help you make the perfect decision. Two people can look at the same problem and reach different conclusions because they are simplifying or abstracting the problem differently. This is because they are starting from different assumptions, trusting different information, and/or optimizing for different outcomes.
+
+This is one reason real-world decisions are hard to evaluate cleanly. All decisions have incomplete information, changing constraints, and probabilistic outcomes.
