@@ -1,4 +1,4 @@
-# karanvasdev.com
+# https://karanvasdev.netlify.app/
 
 Personal site. Essays, field notes, marginalia, and models, visualized as a topology.
 
