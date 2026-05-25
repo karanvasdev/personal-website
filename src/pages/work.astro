@@ -116,7 +116,7 @@ const ganttJson = JSON.stringify(gantt);
 
     <!-- PROJECTS -->
     {projects.map((group, idx) => (
-      <div class="work-section" id={idx === 0 ? 'projects' : 'research'} style="margin-bottom: 48px;">
+      <div class="work-section" id={idx === 0 ? 'projects' : 'Publications'} style="margin-bottom: 48px;">
         <div class="work-section-label">{group.group}</div>
         <div class="project-list">
           {group.items.map(p => (

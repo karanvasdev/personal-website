@@ -51,7 +51,7 @@ const careerEntries = [
   { id: 'career-kpmg',             title: 'Management Consultant Intern — KPMG Canada',        tags: ['consulting', 'strategy'] },
   { id: 'career-scotiabank-pm-intern', title: 'PM Intern, AI & ML — Scotiabank',              tags: ['product', 'ai'] },
   { id: 'career-scotiabank-apm',   title: 'Associate Product Manager — Scotiabank',            tags: ['product', 'fintech'] },
-  { id: 'career-scotiabank-pm',    title: 'Product Manager, Auth & Fraud — Scotiabank',        tags: ['fraud', 'security'] },
+  { id: 'career-scotiabank-pm',    title: 'Product Manager, Auth & Fraud — Scotiabank',        tags: ['product', 'security'] },
   { id: 'career-sama',             title: 'Product Manager II, NLP — Sama',                   tags: ['ai', 'nlp'] },
   { id: 'career-sportstech',       title: 'Founding PM — Sports Tech Startup',                tags: ['startup', 'product'] },
   { id: 'career-zenira',           title: 'Founder & CEO — Zenira Partners',                  tags: ['consulting', 'nonprofit'] },
@@ -67,16 +67,20 @@ careerEntries.forEach(c => {
     date: '', type: 'career', r: 9, shape: 'square', tags: c.tags, url: '/work#career', x: pos.x, y: pos.y });
 });
 
-// Projects — max 3 tags each, distinct enough to avoid blanket connectivity
+// Projects - max 3 tags each, distinct enough to avoid blanket connectivity
+// Includes Vibecoding and Rapid Prototyping + Product and Consulting Cases from /work
 const projectEntries = [
-  { id: 'project-maintainx', title: 'MaintainX — Search Product Strategy', tags: ['product', 'saas'] },
-  { id: 'project-persona',   title: 'Persona — GTM Strategy Memo',         tags: ['gtm', 'fraud'] },
-  { id: 'project-reusable',  title: 'ReusableEats',                        tags: ['startup', 'sustainability'] },
-  { id: 'project-national',  title: 'National Strategy Competition',        tags: ['strategy', 'consulting'] },
-  { id: 'project-jdc',       title: 'JDC West — International Biz Strategy',tags: ['strategy', 'international'] },
-  { id: 'project-pwc',       title: 'PwC Tech-Strategy Challenge',          tags: ['strategy', 'technology'] },
-  { id: 'project-australia', title: 'Australian UG Business Case',          tags: ['strategy', 'international'] },
-  { id: 'project-scotiah',   title: 'Scotia Hacks',                         tags: ['fintech', 'product'] },
+  { id: 'project-basic-ragsearch', title: 'Basic RAGSearch',                                  tags: ['ai', 'retrieval', 'prototyping'] },
+  { id: 'project-portfolio',       title: 'Personal Portfolio Website',                       tags: ['prototyping', 'personal-brand'] },
+  { id: 'project-maintainx',       title: 'MaintainX - Search Product Strategy',              tags: ['product', 'saas'] },
+  { id: 'project-persona',         title: 'Persona - GTM Client Pitch',                       tags: ['gtm', 'fraud'] },
+  { id: 'project-sama-pmf',        title: 'Sama - GenAI Product Market Fit',                  tags: ['ai', 'product', 'gtm'] },
+  { id: 'project-reusable',        title: 'ReusableEats',                                     tags: ['startup', 'sustainability'] },
+  { id: 'project-national',        title: 'National Strategy Consulting Competition',          tags: ['strategy', 'consulting'] },
+  { id: 'project-jdc',             title: 'JDC West - International Business Strategy',        tags: ['strategy', 'international'] },
+  { id: 'project-pwc',             title: 'PwC Tech-Strategy Challenge',                      tags: ['strategy', 'technology'] },
+  { id: 'project-australia',       title: 'Australian Undergraduate Business Case Competition',tags: ['strategy', 'international'] },
+  { id: 'project-scotiah',         title: 'Scotia Hacks',                                     tags: ['fintech', 'prototyping'] },
 ];
 
 projectEntries.forEach(p => {
@@ -85,10 +89,11 @@ projectEntries.forEach(p => {
     date: '', type: 'projects', r: 8, shape: 'triangle', tags: p.tags, url: '/work#projects', x: pos.x, y: pos.y });
 });
 
-// Research — separate from projects, links to /work#research
+// Research and publications - separate from projects, links to /work#research
 const researchEntries = [
-  { id: 'research-omni',  title: 'OmniGrouping',              tags: ['ai', 'research'] },
-  { id: 'research-genai', title: 'GenAI & Fraud in Fintech',  tags: ['ai', 'fraud'] },
+  { id: 'research-bulk-classification', title: 'Bulk Classification',      tags: ['ai', 'nlp'] },
+  { id: 'research-omni',                title: 'OmniGrouping',             tags: ['ai', 'research'] },
+  { id: 'research-genai',               title: 'GenAI & Fraud in Fintech', tags: ['ai', 'fraud'] },
 ];
 
 researchEntries.forEach(r => {
