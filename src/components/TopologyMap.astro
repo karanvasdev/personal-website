@@ -89,17 +89,17 @@ projectEntries.forEach(p => {
     date: '', type: 'projects', r: 8, shape: 'triangle', tags: p.tags, url: '/work#projects', x: pos.x, y: pos.y });
 });
 
-// Research and publications - separate from projects, links to /work#research
-const researchEntries = [
-  { id: 'research-bulk-classification', title: 'Bulk Classification',      tags: ['ai', 'nlp'] },
-  { id: 'research-omni',                title: 'OmniGrouping',             tags: ['ai', 'research'] },
-  { id: 'research-genai',               title: 'GenAI & Fraud in Fintech', tags: ['ai', 'fraud'] },
+// Publications and publications - separate from projects, links to /work#publications
+const publicationsEntries = [
+  { id: 'publications-bulk-classification', title: 'Bulk Classification',      tags: ['ai', 'nlp'] },
+  { id: 'publications-omni',                title: 'OmniGrouping',             tags: ['ai', 'publications'] },
+  { id: 'publications-genai',               title: 'GenAI & Fraud in Fintech', tags: ['ai', 'fraud'] },
 ];
 
-researchEntries.forEach(r => {
+publicationsEntries.forEach(r => {
   const pos = seededPos(r.id, W, H);
-  nodes.push({ id: r.id, title: r.title, section: 'research', sectionLabel: 'Research',
-    date: '', type: 'research', r: 9, shape: 'ring', tags: r.tags, url: '/work#research', x: pos.x, y: pos.y });
+  nodes.push({ id: r.id, title: r.title, section: 'publications', sectionLabel: 'Publications',
+    date: '', type: 'publications', r: 9, shape: 'ring', tags: r.tags, url: '/work#publications', x: pos.x, y: pos.y });
 });
 
 // Edges from shared tags
@@ -127,7 +127,7 @@ const edgesJson = JSON.stringify(edges);
   <div class="map-legend">
     <div class="legend-row"><span class="legend-shape legend-square" style="background:#1C1A17;"></span>Career</div>
     <div class="legend-row"><span class="legend-shape legend-triangle"></span>Projects</div>
-    <div class="legend-row"><span class="legend-shape legend-ring" style="border-color:#6B4E71;"></span>Research</div>
+    <div class="legend-row"><span class="legend-shape legend-ring" style="border-color:#6B4E71;"></span>Publications</div>
     <div class="legend-row"><span class="legend-shape legend-circle" style="background:#B5543A;"></span>Essays</div>
     <div class="legend-row"><span class="legend-shape legend-diamond" style="background:#A87C3C;"></span>Mental Models</div>
     <div class="legend-row"><span class="legend-shape legend-dot" style="background:#A9A096;"></span>Notes</div>
@@ -144,7 +144,7 @@ const edgesJson = JSON.stringify(edges);
     field:    '#A9A096',
     career:   '#1C1A17',
     projects: '#4A7C7E',
-    research: '#6B4E71',
+    publications: '#6B4E71',
   };
 
   const svg = document.getElementById('topology');
@@ -204,10 +204,10 @@ const edgesJson = JSON.stringify(edges);
         n.type === 'field'    ? 'var(--c-field)'   :
         n.type === 'models'   ? 'var(--c-models)'  :
         n.type === 'career'   ? 'var(--ink)'       :
-        n.type === 'research' ? '#6B4E71'          :
+        n.type === 'publications' ? '#6B4E71'          :
         '#4A7C7E';
       hoverCard.querySelector('.hc-title').textContent = n.title;
-      hoverCard.querySelector('.hc-meta').textContent = n.date || (n.type === 'career' ? 'Click to view career' : n.type === 'research' ? 'Click to view research' : 'Click to view project');
+      hoverCard.querySelector('.hc-meta').textContent = n.date || (n.type === 'career' ? 'Click to view career' : n.type === 'publications' ? 'Click to view publications' : 'Click to view project');
       positionCard(n);
       edgeEls.forEach(({ el, a, b }) => {
         if (a === n.id || b === n.id) el.classList.add('highlight');
