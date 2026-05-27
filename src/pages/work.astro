@@ -78,6 +78,22 @@ const ganttJson = JSON.stringify(gantt);
 ---
 <BaseLayout title="Work — Karan Vasdev" description="Career history and projects by Karan Vasdev.">
   <SiteHeader />
+
+  <!-- Hidden Netlify form for build-time detection -->
+  <form
+    name="resume-request"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    hidden
+  >
+    <input type="hidden" name="form-name" value="resume-request" />
+    <input name="bot-field" />
+    <input type="text" name="name" />
+    <input type="text" name="role" />
+    <input type="email" name="email" />
+  </form>
+
   <div class="work-wrap">
 
     <!-- PAGE HEADER -->
@@ -116,7 +132,12 @@ const ganttJson = JSON.stringify(gantt);
 
     <!-- PROJECTS -->
     {projects.map((group, idx) => (
-      <div class="work-section" id={idx === 0 ? 'projects' : 'Publications'} style="margin-bottom: 48px;">
+      <div
+        class="work-section"
+        id={idx === 0 ? 'projects' : idx === 1 ? 'cases' : 'publications'}
+        style="margin-bottom: 48px;"
+      >
+        {idx === 2 && <span id="research" class="anchor-alias" aria-hidden="true"></span>}
         <div class="work-section-label">{group.group}</div>
         <div class="project-list">
           {group.items.map(p => (
@@ -141,7 +162,14 @@ const ganttJson = JSON.stringify(gantt);
       <h2 class="resume-gate-title">Want the full picture?</h2>
       <p class="resume-gate-sub">No personal emails allowed. Please enter your work email if you are interested in seeing my resume or reach out to me on <a href="https://www.linkedin.com/in/karan-vasdev/" target="_blank" rel="noopener" style="color:var(--persimmon); border-bottom: 1px solid var(--persimmon-soft);">LinkedIn</a>.</p>
 
-      <form class="gate-form" id="gateForm" name="resume-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="return false;">
+      <form
+        class="gate-form"
+        id="gateForm"
+        name="resume-request"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+      >
         <input type="hidden" name="form-name" value="resume-request" />
         <p style="display:none;"><input name="bot-field" /></p>
         <div class="gate-field">
@@ -494,13 +522,34 @@ const ganttJson = JSON.stringify(gantt);
   btn.addEventListener('click', async () => {
     attempted = true;
     if (!validate()) return;
+
     btn.disabled = true;
     btn.textContent = 'Sending...';
+
+    let res;
     try {
-      await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() });
-    } catch (_) {}
+      res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString(),
+      });
+    } catch (_) {
+      btn.disabled = false;
+      btn.textContent = 'Download resume →';
+      alert('Something went wrong. Please try again.');
+      return;
+    }
+
+    if (!res.ok) {
+      btn.disabled = false;
+      btn.textContent = 'Download resume →';
+      alert('Something went wrong. Please try again.');
+      return;
+    }
+
     form.style.display = 'none';
     success.classList.add('visible');
+
     const a = document.createElement('a');
     a.href = '/resume/karan-vasdev-resume.pdf';
     a.download = 'Karan-Vasdev-Resume.pdf';
